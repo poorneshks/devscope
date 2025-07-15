@@ -1,0 +1,30 @@
+name: Build and Deploy Devscope App
+
+on:
+  push:
+    branches:
+      - main  # Run workflow when you push to main branch
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ?? Checkout code
+        uses: actions/checkout@v4
+
+      - name: ?? Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+
+      - name: ?? Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: ? Run health check
+        run: |
+          python app.py &
+          sleep 3
+          curl http://localhost:5000/health
